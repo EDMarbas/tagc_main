@@ -1,0 +1,68 @@
+{% extends "members/base.html" %}
+{% block members_content %}
+<article class="membership-profile">
+    <header class="membership-profile-header">
+        <div>
+            <h1>{{ member.first_name }} {% if member.middle_name %}{{ member.middle_name }} {% endif %}{{ member.family_name }}</h1>
+            <p>Member ID <strong>{{ member.member_id }}</strong></p>
+            {% if member.excel_profile_values.STATUS %}
+                <p>Excel status <strong>{{ member.excel_profile_values.STATUS }}</strong></p>
+            {% endif %}
+            {% if perms.members.change_member %}
+                <a class="button" href="{% url 'members:edit' member.pk %}">Edit member</a>
+            {% endif %}
+        </div>
+        {% if has_photo %}
+            <img class="membership-profile-photo" src="{% url 'members:photo' member.pk %}" alt="Member photo">
+        {% else %}
+            <div class="membership-profile-photo membership-profile-initials" aria-hidden="true">{{ member.first_name|first }}{{ member.family_name|first }}</div>
+        {% endif %}
+    </header>
+    {% include "members/profile_completeness.html" %}
+    {% for heading, rows in sections %}
+        {% if heading != "Application and Remarks" %}
+        <section>
+            <h2>{{ heading }}</h2>
+            {% if rows %}
+                <dl>
+                    {% for label, value in rows %}
+                        <dt>{{ label }}</dt><dd>{{ value|linebreaksbr }}</dd>
+                    {% endfor %}
+                </dl>
+            {% else %}
+                <p>No details recorded.</p>
+            {% endif %}
+        </section>
+        {% endif %}
+    {% endfor %}
+    <section>
+        <h2>Children</h2>
+        {% for child in member.children.all %}
+            <h3>{{ child.name }}</h3>
+            <dl>
+                <dt>Date of Birth</dt><dd>{{ child.birth_date|default_if_none:"—" }}</dd>
+                <dt>Gender</dt><dd>{{ child.get_gender_display|default:"—" }}</dd>
+                <dt>Attends TAGC</dt><dd>{{ child.attends_tagc|yesno:"Yes,No,Unknown" }}</dd>
+                {% if child.other_church %}<dt>Other Church</dt><dd>{{ child.other_church }}</dd>{% endif %}
+            </dl>
+        {% empty %}
+            <p>No children recorded.</p>
+        {% endfor %}
+    </section>
+    {% if member.notes %}
+        <section>
+            <h2>Remarks</h2>
+            <dl><dt>Notes</dt><dd>{{ member.notes|linebreaksbr }}</dd></dl>
+        </section>
+    {% endif %}
+    <section>
+        <h2>Record Activity</h2>
+        <dl>
+            <dt>Created by</dt><dd>{{ member.created_by|default_if_none:"—" }}</dd>
+            <dt>Created at</dt><dd>{{ member.created_at }}</dd>
+            <dt>Last Edited by</dt><dd>{{ member.updated_by|default_if_none:"—" }}</dd>
+            <dt>Last Edited at</dt><dd>{{ member.updated_at }}</dd>
+        </dl>
+    </section>
+</article>
+{% endblock %}

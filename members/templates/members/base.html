@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Members | Tagum Alliance Gospel Church{% endblock %}
+
+{% block after_header %}
+{% if perms.members.view_member %}
+    <nav class="container members-nav member-registry-nav" aria-label="Member registry">
+        <a href="{% url 'members:directory' %}">Member directory</a>
+        {% if perms.members.add_member %}
+            <a href="{% url 'members:add' %}">Add member</a>
+        {% endif %}
+        <a href="{% url 'members:summary' %}">Summary</a>
+    </nav>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="members">
+    {% block members_content %}{% endblock %}
+</section>
+{% endblock %}

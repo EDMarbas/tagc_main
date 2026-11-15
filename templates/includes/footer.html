@@ -1,0 +1,10 @@
+{% load static %}
+<footer class="site-footer">
+    <div class="container site-footer-content">
+        <a class="brand" href="{% url 'main:home' %}">
+            <img src="{% static 'images/tagc-logo.png' %}" width="182" height="168" alt="">
+            <span>Tagum Alliance Gospel Church</span>
+        </a>
+        <p>&copy; {% now "Y" %} Tagum Alliance Gospel Church</p>
+    </div>
+</footer>

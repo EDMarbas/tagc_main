@@ -1,0 +1,28 @@
+{% extends "members/base.html" %}
+{% block members_content %}
+<h1>Membership summary</h1>
+<p>Total member records <strong>{{ total }}</strong></p>
+<div class="members-record">
+    {% for title, rows in charts %}
+        <section class="members-panel">
+            <h2>{{ title }}</h2>
+            {% if title == "Ministry interests" %}
+                <p>Members can appear in more than one interest.</p>
+            {% endif %}
+            {% if total %}
+                {% for label, count in rows %}
+                    <div class="members-chart-row">
+                        <span>{{ label }}</span>
+                        <meter min="0" max="{{ total }}" value="{{ count }}" aria-label="{{ label }}"></meter>
+                        <span>{{ count }}</span>
+                    </div>
+                {% empty %}
+                    <p>No entries recorded.</p>
+                {% endfor %}
+            {% else %}
+                <p>No member records yet.</p>
+            {% endif %}
+        </section>
+    {% endfor %}
+</div>
+{% endblock %}

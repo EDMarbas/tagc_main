@@ -1,0 +1,13 @@
+{% extends "members/base.html" %}
+{% block members_content %}
+<section>
+    <h1>Excel import needs attention</h1>
+    <p>No members were saved from this upload. Correct the workbook and try again.</p>
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    <a class="button" href="{% url 'members:add' %}">Return to Add member</a>
+</section>
+{% endblock %}

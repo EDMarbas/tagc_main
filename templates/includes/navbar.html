@@ -1,0 +1,56 @@
+{% load static %}
+<header class="site-header">
+    <svg width="0" height="0" aria-hidden="true" focusable="false"
+         style="position: absolute;">
+        <defs>
+            <filter id="tagc-wordmark-royal-blue" color-interpolation-filters="sRGB">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                    <feFuncR type="table" tableValues="0.066667 0.066667 0.533333 1" />
+                    <feFuncG type="table" tableValues="0.176471 0.176471 0.588235 1" />
+                    <feFuncB type="table" tableValues="0.533333 0.533333 0.766667 1" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+    <nav class="container navigation" aria-label="Main navigation">
+        <a class="brand" href="{% url 'main:home' %}">
+            <img class="brand-wordmark" src="{% static 'images/tagc-footer-wordmark.png' %}"
+                 width="1862" height="845" alt="Tagum Alliance Gospel Church">
+        </a>
+        <button class="navigation-toggle" type="button" aria-controls="main-navigation-links" aria-expanded="false" hidden>Menu</button>
+        <ul class="navigation-links" id="main-navigation-links">
+            <li><a href="{% url 'main:home' %}">Home</a></li>
+            {% if request.resolver_match.view_name == "main:home" %}
+                <li><a href="#about">About</a></li>
+                <li><a href="#ministries">Ministries</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#sermons">Sermons</a></li>
+                <li><a href="#giving">Giving</a></li>
+            {% endif %}
+            {% if request.resolver_match.view_name != "main:home" %}
+                {% if user.is_authenticated %}
+                    {% include "includes/account_links.html" %}
+                    <li>{% include "includes/logout_form.html" %}</li>
+                {% else %}
+                    <li><a class="button" href="{% url 'login' %}">Log In</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+        {% if request.resolver_match.view_name == "main:home" %}
+            <div class="home-account-actions">
+                {% if user.is_authenticated %}
+                    {% if perms.members.view_member or perms.members.review_membershipcheck or not user.is_staff and not user.is_superuser %}
+                        <details class="home-account-menu">
+                            <summary>More</summary>
+                            <ul>{% include "includes/account_links.html" %}</ul>
+                        </details>
+                    {% endif %}
+                    {% include "includes/logout_form.html" %}
+                {% else %}
+                    <a class="button" href="{% url 'login' %}">Log In</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </nav>
+</header>

@@ -1,0 +1,31 @@
+{% extends "members/base.html" %}
+{% block title %}Membership Verification | Tagum Alliance Gospel Church{% endblock %}
+{% block members_content %}
+<section class="verification">
+    <h1>Membership Verification</h1>
+    <p>Review requests to link an existing membership or allow a new application.</p>
+    <nav class="members-nav" aria-label="Filter requests">
+        <a href="{% url 'members:verification_queue' %}"{% if not show_all %} aria-current="page"{% endif %}>Pending requests</a>
+        <a href="?status=all"{% if show_all %} aria-current="page"{% endif %}>All requests</a>
+    </nav>
+    {% for check in page %}
+        <article class="members-panel verification-request">
+            <div>
+                <h2>{{ check.full_name }}</h2>
+                <p>{{ check.account.get_username }} · {{ check.created_at|date:"M j, Y, g:i a" }}</p>
+            </div>
+            <p class="verification-status">{% if check.account.membership_record %}Linked{% elif check.cleared_for_application %}Cleared{% else %}Pending{% endif %}</p>
+            <a class="button" href="{% url 'members:review_membership_check' check.pk %}">Review request</a>
+        </article>
+    {% empty %}
+        <p>No {% if not show_all %}pending {% endif %}membership requests.</p>
+    {% endfor %}
+    {% if page.has_other_pages %}
+        <nav class="members-nav" aria-label="Request pages">
+            {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if show_all %}&amp;status=all{% endif %}">Previous</a>{% endif %}
+            <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+            {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if show_all %}&amp;status=all{% endif %}">Next</a>{% endif %}
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}

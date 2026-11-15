@@ -1,0 +1,199 @@
+{% extends "members/base.html" %}
+{% load static %}
+{% block members_content %}
+{% if not self_service and not member.pk and perms.members.add_member %}
+    <details class="members-nav">
+        <summary class="button">Bulk upload members</summary>
+        <h2>How to prepare your Excel file</h2>
+        <ol>
+            <li>Download the Excel template and open the Members tab.</li>
+            <li>
+                Keep the column headers in row 1 and enter one member per row starting
+                in row 2. Fill in as much information as you can, with at least a last
+                name and first name for each member. You can add missing details or
+                update existing information later.
+            </li>
+            <li>
+                The app automatically assigns each new member a unique ID, such as
+                MBR-0001, when the record is saved.
+            </li>
+            <li>
+                Enter birth, wedding, baptism, and spiritual birthday dates as MM/DD/YYYY
+                (for example, 03/11/1991 for March 11, 1991). MM-DD-YYYY also works.
+                Enter ADDRESS, SPOUSE NAME, JOINED TAGC, STATUS, and CIVIL STATUS as you
+                want them to appear on the member record.
+            </li>
+            <li>Save the completed workbook as an .xlsx file, then select it below and click Import members.</li>
+            <li>If the import flags a possible duplicate, review the listed row and correct or remove it before trying again.</li>
+        </ol>
+        <a class="button" href="{% url 'members:download_member_import_template' %}">
+            Download Excel template
+        </a>
+        <form method="post" enctype="multipart/form-data" action="{% url 'members:bulk_import' %}">
+            {% csrf_token %}
+            <p>
+                <label for="member-workbook">Completed Excel workbook</label>
+                <input id="member-workbook" type="file" name="workbook" accept=".xlsx" required>
+            </p>
+            <button class="button" type="submit">Import members</button>
+        </form>
+    </details>
+{% endif %}
+<form method="post" enctype="multipart/form-data" class="members-form membership-application"{% if member.pk %} data-highlight-blank{% if has_photo %} data-has-photo{% endif %}{% endif %}>
+    {% csrf_token %}
+    <header class="application-heading">
+        <div>
+            <p class="application-church">Tagum Alliance Gospel Church (TAGC)</p>
+            <p>Christian and Missionary Alliance Churches of the Philippines, Inc.<br>
+                Cor. Visayan Village, National Highway, Tagum City</p>
+        </div>
+        <h1>Membership Application Form</h1>
+    </header>
+    {% if member.pk %}
+        <p>Editing {{ member }} · {{ member.member_id }}</p>
+        <p class="member-completeness-note"><strong>NOTE:</strong> Red outlines show which fields are blank. If a field doesn't apply, enter NA where you can. This counts toward profile completeness.</p>
+    {% endif %}
+    {{ form.non_field_errors }}
+    <fieldset>
+        <legend>Application details</legend>
+        <div class="members-fields">
+            <div><strong>Application type</strong><br>{{ application_type }}</div>
+            <div>{{ form.application_date.as_field_group }}</div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Personal Data</legend>
+        <p>First name and family name are required.</p>
+        <div class="application-personal">
+            <div class="members-fields">
+                <div class="members-fields application-name-row application-wide">
+                    <div>{{ form.family_name.as_field_group }}</div>
+                    <div>{{ form.first_name.as_field_group }}</div>
+                    <div>{{ form.middle_name.as_field_group }}</div>
+                    <div class="application-suffix">{{ form.suffix.as_field_group }}</div>
+                </div>
+                <div class="application-wide">{{ form.street_address.as_field_group }}</div>
+                <div>{{ form.city.as_field_group }}</div>
+                <div>{{ form.province.as_field_group }}</div>
+                <div>{{ form.housing_status.as_field_group }}</div>
+                <div>{{ form.civil_status.as_field_group }}</div>
+                <div>{{ form.wedding_anniversary.as_field_group }}</div>
+                <div>{{ form.gender.as_field_group }}</div>
+            </div>
+            <div class="application-photo">
+                <p>Recent 2×2 ID photo</p>
+                {{ form.photo.as_field_group }}
+                <p id="photo-preview-status" role="status"></p>
+                <div id="photo-editor" hidden>
+                    <canvas id="photo-preview" width="512" height="512" role="img" aria-label="Preview of the square member photo"></canvas>
+                    <label for="photo-zoom">Zoom</label>
+                    <input id="photo-zoom" type="range" min="75" max="200" step="5" value="100">
+                    <label for="photo-horizontal">Horizontal position</label>
+                    <input id="photo-horizontal" type="range" min="-100" max="100" value="0">
+                    <label for="photo-vertical">Vertical position</label>
+                    <input id="photo-vertical" type="range" min="-100" max="100" value="0">
+                    <button type="button" id="photo-reset">Reset crop</button>
+                </div>
+            </div>
+        </div>
+        <div class="application-birth-row">
+            <div>
+                {{ form.birth_date.label_tag }}
+                {{ form.birth_date }}
+                <div>{{ form.birth_date.errors }}</div>
+            </div>
+            <div>
+                <label for="member-calculated-age">Age</label>
+                <output id="member-calculated-age" for="{{ form.birth_date.id_for_label }}" data-member-age>{{ member.age|default_if_none:"—" }}</output>
+            </div>
+            <div>
+                {{ form.birth_place.label_tag }}
+                {{ form.birth_place }}
+                <div>{{ form.birth_place.errors }}</div>
+            </div>
+            <div>
+                {{ form.citizenship.label_tag }}
+                {{ form.citizenship }}
+                <div>{{ form.citizenship.errors }}</div>
+            </div>
+        </div>
+        <div class="members-fields">
+            <div>{{ form.education.as_field_group }}</div>
+            <div>{{ form.occupation.as_field_group }}</div>
+            <div>{{ form.employer.as_field_group }}</div>
+            <div>{{ form.work_address.as_field_group }}</div>
+            <div>{{ form.contact_numbers.as_field_group }}</div>
+            <div>{{ form.email.as_field_group }}</div>
+            <div>{{ form.father_name.as_field_group }}</div>
+            <div>{{ form.mother_name.as_field_group }}</div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Information of Family Members</legend>
+        <div class="members-fields">
+            <div>{{ form.spouse_family_name.as_field_group }}</div>
+            <div>{{ form.spouse_first_name.as_field_group }}</div>
+            <div>{{ form.spouse_middle_name.as_field_group }}</div>
+            <div>{{ form.spouse_birth_date.as_field_group }}</div>
+        </div>
+        <h2>Children below 18 years old</h2>
+        {{ children.management_form }}
+        {{ children.non_form_errors }}
+        <div id="member-children">
+            {% for child in children %}
+                {% include "members/child_form.html" %}
+            {% endfor %}
+        </div>
+        <template id="member-child-template">
+            {% include "members/child_form.html" with child=children.empty_form %}
+        </template>
+        <button class="button" id="member-add-child" type="button">Add child</button>
+    </fieldset>
+    {% for heading, fields in form.sections %}
+        {% if heading == "Church involvement" or heading == "Ministry interests" %}
+            <fieldset>
+                <legend>{% if heading == "Church involvement" %}Membership Data{% else %}Ministry Interests{% endif %}</legend>
+                {% if heading == "Ministry interests" %}<p>You may select more than one.</p>{% endif %}
+                <div class="members-fields">
+                    {% for field in fields %}
+                        {% if field.name == "discovery_details" %}
+                            <div data-discovery-details>{{ field.as_field_group }}</div>
+                            <dialog class="membership-request-dialog discovery-other-dialog" aria-labelledby="discovery-dialog-title" data-discovery-dialog>
+                                <header class="discovery-dialog-header">
+                                    <h2 id="discovery-dialog-title">Other source</h2>
+                                    <button type="button" class="discovery-dialog-close" aria-label="Close popup" data-discovery-close>×</button>
+                                </header>
+                                <div data-discovery-input></div>
+                                <button type="button" class="button" data-discovery-done>Done</button>
+                            </dialog>
+                        {% else %}
+                            <div{% if field.name == "discovery_sources" %} class="application-wide discovery-source-options"{% elif field.name == "ministry_interests" %} class="application-wide"{% endif %}>
+                                {{ field.as_field_group }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </fieldset>
+        {% endif %}
+    {% endfor %}
+    <fieldset>
+        <legend>Remarks</legend>
+        <div class="members-fields">
+            <div>{{ form.parents_not_members.as_field_group }}</div>
+            <div>{{ form.hcdc_beneficiary.as_field_group }}</div>
+            {% if not self_service %}
+            <div class="application-wide">{{ form.notes.as_field_group }}</div>
+            {% endif %}
+        </div>
+    </fieldset>
+    <p class="application-reference">TAGC-F-T01 · Rev. 00</p>
+    <div class="application-actions">
+        <a href="{% if self_service %}{% url 'members:my_membership' %}{% elif member.pk %}{% url 'members:detail' member.pk %}{% else %}{% url 'members:directory' %}{% endif %}">Cancel</a>
+        <button class="button" type="submit">{% if self_service and not member.pk %}Submit application{% else %}Save changes{% endif %}</button>
+    </div>
+</form>
+<script src="{% static 'members/children.js' %}" defer></script>
+<script src="{% static 'members/photo-zoom.js' %}" defer></script>
+<script src="{% static 'members/discovery-other.js' %}?v=single-source" defer></script>
+{% if member.pk %}<script src="{% static 'members/blank-fields.js' %}" defer></script>{% endif %}
+{% endblock %}

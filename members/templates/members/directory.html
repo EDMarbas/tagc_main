@@ -1,0 +1,100 @@
+{% extends "members/base.html" %}
+{% block members_content %}
+<h1>Member directory</h1>
+{% for message in messages %}<p role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}">{{ message }}</p>{% endfor %}
+<form method="get" class="directory-search">
+    <div class="members-filters membership-lookup-search directory-toolbar">
+        <details class="directory-filters"{% if filters.errors %} open{% endif %}>
+            <summary>Add filter{% if active_filters %} ({{ active_filters|length }}){% endif %}</summary>
+            <div class="directory-filter-menu">
+                {% for field in filters %}
+                    <details name="directory-filter-category"{% if field.errors %} open{% endif %}>
+                        <summary>{{ field.label }}</summary>
+                        {{ field.as_field_group }}
+                    </details>
+                {% endfor %}
+                <button class="button" type="submit">Apply filters</button>
+            </div>
+        </details>
+        <label>Search members <input type="search" name="q" value="{{ query }}" maxlength="320" placeholder="Name, member ID, contact number, city, care group, or ministry"></label>
+        <button class="button" type="submit">Search</button>
+    </div>
+</form>
+{% if active_filters %}
+    <ul class="directory-filter-chips" aria-label="Active filters" role="list">
+        {% for label, remaining in active_filters %}
+            <li><a href="?{{ remaining }}" aria-label="Remove filter {{ label }}">{{ label }} <span aria-hidden="true">×</span></a></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<div class="members-table directory-table">
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Member Name</th>
+                <th scope="col" class="directory-member-id">Member ID</th>
+                <th scope="col">Age</th>
+                <th scope="col">Email Address</th>
+                <th scope="col">Contact Number</th>
+                <th scope="col">Care Group</th>
+                <th scope="col">Current Ministry</th>
+                <th scope="col">Status</th>
+                <th scope="col">Profile completeness</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in page %}
+                <tr>
+                    <th scope="row"><a href="{% url 'members:detail' member.pk %}">{{ member }}</a></th>
+                    <td class="directory-member-id">{{ member.member_id }}</td>
+                    <td>{{ member.age|default_if_none:"—" }}</td>
+                    <td class="directory-contact-value">{{ member.email|default:"—" }}</td>
+                    <td class="directory-contact-value">{{ member.contact_numbers|default:"—" }}</td>
+                    <td>{{ member.care_group|default:"—" }}</td>
+                    <td>{{ member.current_ministry|default:"—" }}</td>
+                    <td class="directory-status">
+                        {% if can_edit_status %}
+                            <details>
+                                <summary class="directory-status-heading">
+                                    <strong>{% if member.status == "other" and member.status_details %}{{ member.status_details }}{% else %}{{ member.get_status_display|default:"Not set" }}{% endif %}</strong>
+                                    <span>Change status</span>
+                                </summary>
+                                <form method="post" action="{% url 'members:update_member_status' member.pk %}{% if return_parameters %}?{{ return_parameters }}{% endif %}">
+                                    {% csrf_token %}
+                                    <label for="status-{{ member.pk }}">Church status</label>
+                                    <select id="status-{{ member.pk }}" name="status" required>
+                                        {% if not member.status %}<option value="" selected disabled>Choose status</option>{% endif %}
+                                        {% for value, label in status_choices %}
+                                            <option value="{{ value }}"{% if member.status == value %} selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label class="directory-status-other" for="status-details-{{ member.pk }}">Explain Other
+                                        <input id="status-details-{{ member.pk }}" name="status_details" value="{{ member.status_details }}" maxlength="200">
+                                    </label>
+                                    <button class="button" type="submit">Save status</button>
+                                </form>
+                            </details>
+                        {% else %}
+                            <strong>{% if member.status == "other" and member.status_details %}{{ member.status_details }}{% else %}{{ member.get_status_display|default:"Not set" }}{% endif %}</strong>
+                        {% endif %}
+                    </td>
+                    <td>{{ member.profile_completeness.percent }}%</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="9">No member records match.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if page.has_other_pages %}
+    <nav class="members-nav" aria-label="Directory pages">
+        {% if page.has_previous %}
+            <a href="?{{ parameters }}&amp;page={{ page.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}
+            <a href="?{{ parameters }}&amp;page={{ page.next_page_number }}">Next</a>
+        {% endif %}
+    </nav>
+{% endif %}
+{% endblock %}

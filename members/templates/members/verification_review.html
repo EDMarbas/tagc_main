@@ -1,0 +1,89 @@
+{% extends "members/base.html" %}
+{% block title %}Review Membership Request | Tagum Alliance Gospel Church{% endblock %}
+{% block members_content %}
+<section class="verification">
+    <p><a href="{% url 'members:verification_queue' %}">Back to membership verification</a></p>
+    <h1>Review membership request</h1>
+    {% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+    {% if error %}<p class="errorlist" role="alert">{{ error }}</p>{% endif %}
+    <div class="members-record">
+        <section class="members-panel">
+            <h2>Submitted information</h2>
+            <dl>
+                <dt>Username</dt><dd>{{ check.account.get_username }}</dd>
+                <dt>Full name</dt><dd>{{ check.full_name }}</dd>
+                <dt>Contact number</dt><dd>{{ check.contact_number }}</dd>
+                {% if check.email %}<dt>Email address</dt><dd>{{ check.email }}</dd>{% endif %}
+                <dt>Requested</dt><dd>{{ check.created_at|date:"M j, Y, g:i a" }}</dd>
+            </dl>
+        </section>
+        <section class="members-panel">
+            <h2>Membership record</h2>
+            {% if linked_member %}
+                <p>Linked to {{ linked_member }} · {{ linked_member.member_id }}</p>
+            {% else %}
+                {% if check.cleared_for_application %}<p>Cleared to start a new application.</p>{% endif %}
+                {% if candidate %}
+                    <dl>
+                        <dt>Member</dt><dd>{{ candidate }} · {{ candidate.member_id }}</dd>
+                        <dt>Contact number on file</dt><dd>{{ candidate.contact_numbers|default:"None on file" }}</dd>
+                    </dl>
+                    {% if candidate.account_id %}<p>This record is already linked to an account.</p>{% endif %}
+                {% endif %}
+                {% if check.account.is_active %}
+                    <details class="verification-member-picker"{% if search or not candidate %} open{% endif %}>
+                        <summary>{% if candidate %}Select a different member{% else %}Find a member record{% endif %}</summary>
+                        <form method="get" class="verification-form">
+                            {% if candidate %}<input type="hidden" name="member_id" value="{{ candidate.member_id }}">{% endif %}
+                            <label for="review-member-search">Search by name or member ID</label>
+                            <input id="review-member-search" type="search" name="member_search" value="{{ search }}" maxlength="150" required>
+                            <button type="submit" class="button">Search</button>
+                        </form>
+                        {% if search %}
+                            <ul class="verification-member-results" role="list">
+                                {% for match in matches %}
+                                    <li>
+                                        <a href="?member_id={{ match.member_id }}">{{ match }} <small>{{ match.member_id }}</small></a>
+                                    </li>
+                                {% empty %}
+                                    <li>No available records match that search.</li>
+                                {% endfor %}
+                            </ul>
+                            {% if more_matches %}<p>Showing the first 20 matches. Add more of the name to narrow the results.</p>{% endif %}
+                        {% endif %}
+                    </details>
+                {% endif %}
+            {% endif %}
+        </section>
+    </div>
+    {% if not linked_member and check.account.is_active %}
+        <div class="members-record">
+            {% if candidate and not candidate.account_id %}
+                <section class="members-panel">
+                    <h2>Link existing membership</h2>
+                    <p>Verify the requester using the number already on file or in person.</p>
+                    <form method="post" class="verification-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="member_id" value="{{ candidate.member_id }}">
+                        <label><input type="checkbox" name="confirmed" value="yes" required> I verified this person and confirmed the record.</label>
+                        <button type="submit" name="action" value="link" class="button">Link membership</button>
+                    </form>
+                </section>
+            {% endif %}
+            {% if not check.cleared_for_application %}
+                <section class="members-panel">
+                    <h2>Allow a new application</h2>
+                    <p>Use this when you’ve checked the directory and found no existing record for the requester.</p>
+                    <form method="post" class="verification-form">
+                        {% csrf_token %}
+                        <label><input type="checkbox" name="confirmed" value="yes" required> I checked for an existing membership.</label>
+                        <button type="submit" name="action" value="clear" class="button">Allow new application</button>
+                    </form>
+                </section>
+            {% endif %}
+        </div>
+    {% elif not check.account.is_active %}
+        <p>This account is inactive.</p>
+    {% endif %}
+</section>
+{% endblock %}

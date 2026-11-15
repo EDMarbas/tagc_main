@@ -1,0 +1,17 @@
+:root {
+    --royal-blue: #112d88;
+    --deep-navy: #101950;
+    --navy-footer: #142141;
+    --soft-sky: #eef3ff;
+    --warm-white: #fbf7ef;
+    --white: #fff;
+    --surface: #fcf9f4;
+    --cream-shade: #f7f0e5;
+    --gold: #ffb841;
+    --gold-hover: #f6aa2b;
+    --gold-gradient: linear-gradient(120deg, #ffc65a, var(--gold));
+    --border: #e3dcd1;
+    --control-border: #73849d;
+    --font-body: "DM Sans", system-ui, sans-serif;
+    --font-heading: "Playfair Display", Georgia, serif;
+}

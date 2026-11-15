@@ -1,0 +1,58 @@
+{% extends "members/base.html" %}
+{% block title %}Notifications | Tagum Alliance Gospel Church{% endblock %}
+{% block members_content %}
+<h1>Notifications</h1>
+{% for notification in page %}
+    <article class="members-panel">
+        <h2>{{ notification.get_kind_display }}</h2>
+        <p>
+            {{ notification.subject }}
+            {% if notification.member %}
+                · <a href="{% url 'members:detail' notification.member_id %}">{{ notification.member.member_id }}</a>
+            {% endif %}
+        </p>
+        {% if notification.kind == "registration" %}
+            <p>This user created a website account.</p>
+        {% elif notification.kind == "application" %}
+            <p>This member submitted their first membership application.</p>
+        {% elif notification.kind == "check" and notification.membership_check %}
+            <p>This user asked the church office to check for an existing membership.</p>
+            <p>Username <strong>{{ notification.membership_check.account.get_username }}</strong> · Contact number <strong>{{ notification.membership_check.contact_number }}</strong></p>
+            {% if notification.membership_check.suggested_member %}
+                <p>Selected record <a href="{% url 'members:detail' notification.membership_check.suggested_member_id %}">{{ notification.membership_check.suggested_member.member_id }}</a></p>
+            {% endif %}
+            {% if perms.members.review_membershipcheck %}
+                <p><a href="{% url 'members:review_membership_check' notification.membership_check_id %}">Review request</a></p>
+            {% endif %}
+        {% elif notification.kind == "update" %}
+            {% if notification.changed_fields %}
+                <p><strong>Changed:</strong> {{ notification.changed_fields|join:", " }}</p>
+            {% else %}
+                <p>This member updated their application. The changed fields were not recorded for this notification.</p>
+            {% endif %}
+        {% endif %}
+        <p><time datetime="{{ notification.created_at|date:'c' }}">{{ notification.created_at|date:"M j, Y, g:i a" }}</time></p>
+        <div class="notification-actions">
+            {% if not notification.is_read %}
+                <form method="post" action="{% url 'members:mark_notification_read' notification.pk %}">
+                    {% csrf_token %}
+                    <button class="button" type="submit">Mark as read</button>
+                </form>
+            {% endif %}
+            <form class="notification-delete" method="post" action="{% url 'members:dismiss_notification' notification.pk %}">
+                {% csrf_token %}
+                <button class="button" type="submit" aria-label="Delete notification from your inbox">Delete</button>
+            </form>
+        </div>
+    </article>
+{% empty %}
+    <p>No notifications yet.</p>
+{% endfor %}
+{% if page.has_other_pages %}
+    <nav class="members-nav" aria-label="Notification pages">
+        {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">Previous</a>{% endif %}
+        <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Next</a>{% endif %}
+    </nav>
+{% endif %}
+{% endblock %}

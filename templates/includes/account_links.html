@@ -1,0 +1,10 @@
+{% if not user.is_staff and not user.is_superuser and not perms.members.view_member %}
+    <li><a href="{% url 'members:my_membership' %}">My Membership</a></li>
+{% endif %}
+{% if perms.members.view_member %}
+    <li><a href="{% url 'members:directory' %}">Members</a></li>
+    <li><a class="notification-nav-link" href="{% url 'members:notifications' %}"{% if unread_staff_notification_count %} aria-label="Notifications, {{ unread_staff_notification_count }} unread"{% endif %}><span class="notification-nav-label">Notifications</span>{% if unread_staff_notification_count %}<span class="notification-count" aria-hidden="true">{{ unread_staff_notification_count }}</span>{% endif %}</a></li>
+{% endif %}
+{% if perms.members.review_membershipcheck %}
+    <li><a href="{% url 'members:verification_queue' %}">Membership Verification</a></li>
+{% endif %}

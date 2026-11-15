@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Create an Account | Tagum Alliance Gospel Church{% endblock %}
+
+{% block content %}
+<section class="login-panel" aria-labelledby="register-title">
+    <h1 id="register-title">Create an Account</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button" type="submit">Create account</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+</section>
+{% endblock %}

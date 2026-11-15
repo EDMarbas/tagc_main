@@ -1,0 +1,16 @@
+{% with completion=member.profile_completeness %}
+    <section>
+        {% if as_subsection %}<h3>Profile completeness</h3>{% else %}<h2>Profile completeness</h2>{% endif %}
+        <p><strong>{{ completion.percent }}% complete</strong> · {{ completion.filled }} of {{ completion.total }} fields filled</p>
+        {% if completion.missing %}
+            <details>
+                <summary>Missing fields</summary>
+                <ul>
+                    {% for field in completion.missing %}
+                        <li>{{ field }}</li>
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+    </section>
+{% endwith %}

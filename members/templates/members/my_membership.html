@@ -1,0 +1,98 @@
+{% extends "members/base.html" %}
+{% load static %}
+{% block title %}My Membership | Tagum Alliance Gospel Church{% endblock %}
+{% block members_content %}
+<h1>My Membership</h1>
+{% if member %}
+    <article class="membership-profile">
+        <header class="membership-profile-header">
+            <div>
+                <h2>{{ member.first_name }} {% if member.middle_name %}{{ member.middle_name }} {% endif %}{{ member.family_name }}</h2>
+                <p>Member ID <strong>{{ member.member_id }}</strong></p>
+                <a class="button" href="{% url 'members:my_membership_edit' %}">Change my details</a>
+            </div>
+            {% if has_photo %}
+                <img class="membership-profile-photo" src="{% url 'members:my_membership_photo' %}" alt="Your membership photo">
+            {% else %}
+                <div class="membership-profile-photo membership-profile-initials" aria-hidden="true">{{ member.first_name|first }}{{ member.family_name|first }}</div>
+            {% endif %}
+        </header>
+        {% include "members/profile_completeness.html" with as_subsection=True %}
+        {% for heading, rows in profile_sections %}
+            {% if rows %}
+                <section>
+                    <h3>{{ heading }}</h3>
+                    <dl>
+                        {% for label, value in rows %}
+                            <dt>{{ label }}</dt><dd>{{ value }}</dd>
+                        {% endfor %}
+                    </dl>
+                </section>
+            {% endif %}
+        {% endfor %}
+    </article>
+{% elif membership_check.cleared_for_application %}
+    <p>The church office has cleared you to start a new membership application.</p>
+    <a class="button" href="{% url 'members:my_membership_apply' %}">Start a new application</a>
+{% elif membership_check %}
+    <section class="membership-lookup membership-request-status" aria-labelledby="membership-status-title">
+        <span class="membership-status-badge">Pending review</span>
+        <h2 id="membership-status-title">Membership request received</h2>
+        <p>The TAGC church office will review your request and check for an existing membership record.</p>
+        <dl class="membership-status-details">
+            <dt>Submitted</dt>
+            <dd><time datetime="{{ membership_check.created_at|date:'c' }}">{{ membership_check.created_at|date:"F j, Y, g:i a" }}</time></dd>
+        </dl>
+        <div class="membership-status-next">
+            <h3>What happens next</h3>
+            <p>Once the review is complete, this page will show your linked membership or the option to start a new application.</p>
+        </div>
+    </section>
+{% else %}
+    <section class="membership-lookup" aria-labelledby="membership-lookup-title">
+    <h2 id="membership-lookup-title">Check if you already have a TAGC membership record</h2>
+    <p>Search using all or part of your name. If you find your membership record, select it to submit a request to link it to your account. The admin will review your request before linking the record.</p>
+    <form method="get" class="members-filters membership-lookup-search">
+        <label>Search by name <input type="search" name="name" value="{{ query }}" maxlength="320" placeholder="Enter all or part of your name" required></label>
+        <button class="button" type="submit">Search</button>
+    </form>
+    {% if query %}
+        {% if candidates %}
+            <h3>Search results</h3>
+            <p>If you see your name below, select it and we’ll help connect your membership to your account.</p>
+            <ul class="membership-lookup-results" role="list">
+                {% for name, token in candidates %}
+                    <li><button type="button" class="membership-lookup-result" data-membership-request="{{ token }}" data-member-name="{{ name }}" aria-haspopup="dialog">
+                        <strong>{{ name }}</strong><span>Request to link</span>
+                    </button></li>
+                {% endfor %}
+            </ul>
+            {% if search_page.has_other_pages %}
+                <nav class="members-nav" aria-label="Search results pages">
+                    {% if search_page.has_previous %}<a href="?name={{ query|urlencode }}&amp;page={{ search_page.previous_page_number }}">Previous</a>{% endif %}
+                    <span>Page {{ search_page.number }} of {{ search_page.paginator.num_pages }}</span>
+                    {% if search_page.has_next %}<a href="?name={{ query|urlencode }}&amp;page={{ search_page.next_page_number }}">Next</a>{% endif %}
+                </nav>
+            {% endif %}
+        {% elif can_start_application %}
+            <p>We couldn’t find a match for that name. You can try a different spelling or start a new membership application.</p>
+            <a class="button" href="{% url 'members:my_membership_apply' %}">Start a new application</a>
+        {% endif %}
+    {% endif %}
+    </section>
+    <dialog id="membership-request" class="login-panel membership-request-dialog" aria-labelledby="membership-request-title" data-reopen="{{ check_form.errors|yesno:'yes,no' }}">
+        <h2 id="membership-request-title">Request to link my membership</h2>
+        <p>Enter your complete name and contact number so the church office can review your request. You can also provide an email address.</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="candidate" value="{{ candidate_token }}">
+            {{ check_form.as_p }}
+            <div class="membership-request-actions">
+                <button class="button" type="submit">Send request</button>
+                <button type="button" class="membership-secondary-button" id="close-membership-request">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+    <script src="{% static 'members/membership-check.js' %}" defer></script>
+{% endif %}
+{% endblock %}

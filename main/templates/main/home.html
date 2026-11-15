@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}?v=hero-cormorant">
+    <script src="{% static 'js/home-hero.js' %}" defer></script>
+{% endblock %}
+{% block body_attributes %} class="church-home"{% endblock %}
+
+{% block content %}
+<section class="home-hero" aria-labelledby="home-title">
+    <div class="home-hero-copy">
+        <div class="home-hero-copy-content">
+            <h1 id="home-title"><span>Transformations Accomplishes</span><br>
+                <span>Great Commissions</span></h1>
+            <p>A Christ-centered church in Tagum, where people of all ages can worship, grow in faith, and find a caring church family.</p>
+            <a class="home-button home-button-gold" href="#visit">Plan Your Visit <span aria-hidden="true">→</span></a>
+        </div>
+    </div>
+    <div class="home-hero-media">
+        <img class="home-hero-photo" src="{% static 'images/home-sanctuary-daylight.webp' %}"
+             alt="TAGC sanctuary" fetchpriority="high">
+        <svg class="home-hero-divider" viewBox="0 0 200 100" preserveAspectRatio="none"
+             aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M0 0 H200 C190 7 196 12 194 23 C189 51 152 79 101 100 H0 Z"/>
+            <path class="home-hero-divider-accent" d="M194 23 C189 51 152 79 101 100 H0 C77 79 172 61 194 23 Z"/>
+        </svg>
+    </div>
+</section>
+
+<div class="home-visit">
+    <div class="home-wrap home-visit-grid">
+        <section class="home-visit-item" aria-labelledby="service-times">
+            <span class="home-calendar" aria-hidden="true"></span>
+            <div>
+                <h2 id="service-times">Service Times</h2>
+                <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+            <a class="home-button home-button-outline" href="#visit">View Service Times <span aria-hidden="true">→</span></a>
+        </section>
+        <section class="home-visit-item" aria-labelledby="location">
+            <span class="home-pin" aria-hidden="true"></span>
+            <div>
+                <h2 id="location">Location</h2>
+                <p>Consectetur adipiscing elit.</p>
+            </div>
+            <a class="home-button home-button-outline" href="#contact">Get Directions <span aria-hidden="true">→</span></a>
+        </section>
+    </div>
+</div>
+
+<div class="home-wrap home-sections">
+    <div class="home-intro">
+        <section id="about" aria-labelledby="about-title">
+            <h2 id="about-title">About Our Church</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <a class="home-text-link" href="#involved">Learn More About Us <span aria-hidden="true">→</span></a>
+        </section>
+        <img src="{% static 'images/home-church-exterior.webp' %}"
+             alt="Exterior of Tagum Alliance Gospel Church" width="1536" height="1024" loading="lazy">
+        <section id="visit" aria-labelledby="visit-title">
+            <h2 id="visit-title">What to Expect</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas faucibus mollis interdum. Cras mattis consectetur purus sit amet fermentum.</p>
+            <a class="home-text-link" href="#contact">Plan Your Visit <span aria-hidden="true">→</span></a>
+        </section>
+    </div>
+
+    <div class="home-cards">
+        <section class="home-card" id="events" aria-labelledby="events-title">
+            <img src="{% static 'images/home-events.webp' %}" alt="" width="304" height="151" loading="lazy">
+            <div class="home-card-copy">
+                <h2 id="events-title">Upcoming Events</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <details>
+                    <summary class="home-button home-button-gold">View Events <span aria-hidden="true">→</span></summary>
+                    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </details>
+            </div>
+        </section>
+        <section class="home-card" id="ministries" aria-labelledby="ministries-title">
+            <img src="{% static 'images/home-bible-study.webp' %}" alt="" width="1200" height="600" loading="lazy">
+            <div class="home-card-copy">
+                <h2 id="ministries-title">Ministries &amp; Small Groups</h2>
+                <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+                <details>
+                    <summary class="home-button home-button-gold">Explore Ministries <span aria-hidden="true">→</span></summary>
+                    <p>Donec sed odio dui. Maecenas faucibus mollis interdum.</p>
+                </details>
+            </div>
+        </section>
+        <section class="home-card" id="sermons" aria-labelledby="sermons-title">
+            <img src="{% static 'images/home-sermon-flowers.webp' %}" alt="" width="1200" height="600" loading="lazy">
+            <div class="home-card-copy">
+                <h2 id="sermons-title">Latest Sermon</h2>
+                <p>Cras mattis consectetur purus sit amet fermentum.</p>
+                <details>
+                    <summary class="home-button home-button-gold">Watch Sermon <span aria-hidden="true">→</span></summary>
+                    <p>Etiam porta sem malesuada magna mollis euismod.</p>
+                </details>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="home-action-band">
+    <div class="home-wrap home-actions">
+        <section id="involved" aria-labelledby="involved-title">
+            <h2 id="involved-title">Get Involved</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <a class="home-button home-button-outline" href="#ministries">Get Involved <span aria-hidden="true">→</span></a>
+        </section>
+        <section id="giving" aria-labelledby="giving-title">
+            <h2 id="giving-title">Give</h2>
+            <p>Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <details>
+                <summary class="home-button home-button-outline">Give Now <span aria-hidden="true">→</span></summary>
+                <p>Nullam quis risus eget urna mollis ornare vel eu leo.</p>
+            </details>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer class="site-footer home-footer">
+    <div class="home-wrap home-footer-grid">
+        <a class="brand" href="{% url 'main:home' %}">
+            <img src="{% static 'images/tagc-logo.png' %}" width="182" height="168" alt="">
+            <span>Tagum Alliance Gospel Church</span>
+        </a>
+        <section id="contact" aria-labelledby="contact-title">
+            <h2 id="contact-title">Contact</h2>
+            <p>Lorem ipsum dolor sit amet.</p>
+        </section>
+        <section aria-labelledby="socials-title">
+            <h2 id="socials-title">Socials</h2>
+            <p>Consectetur adipiscing elit.</p>
+            <ul class="home-socials" aria-label="Social platforms">
+                <li><span aria-label="Facebook" role="img" class="home-facebook">f</span></li>
+                <li><span aria-label="YouTube" role="img" class="home-youtube">▶</span></li>
+                <li><span aria-label="Instagram" role="img" class="home-instagram"></span></li>
+            </ul>
+        </section>
+        <p class="home-copyright">&copy; {% now "Y" %} Tagum Alliance Gospel Church</p>
+    </div>
+</footer>
+{% endblock %}

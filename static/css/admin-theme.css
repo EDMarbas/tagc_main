@@ -1,0 +1,63 @@
+:root,
+html[data-theme] {
+    --font-family-primary: var(--font-body);
+    --primary: var(--royal-blue);
+    --secondary: var(--navy-footer);
+    --accent: var(--gold);
+    --header-bg: var(--navy-footer);
+    --header-color: var(--white);
+    --header-branding-color: var(--white);
+    --header-link-color: var(--white);
+    --breadcrumbs-bg: var(--royal-blue);
+    --breadcrumbs-fg: var(--soft-sky);
+    --breadcrumbs-link-fg: var(--white);
+    --button-bg: var(--royal-blue);
+    --button-hover-bg: var(--navy-footer);
+    --default-button-bg: var(--gold);
+    --default-button-hover-bg: var(--gold-hover);
+}
+
+html[data-theme="light"],
+html:not([data-theme="dark"]) {
+    --body-bg: var(--warm-white);
+    --body-fg: var(--deep-navy);
+    --body-loud-color: var(--deep-navy);
+    --darkened-bg: var(--cream-shade);
+    --selected-bg: var(--cream-shade);
+    --border-color: var(--border);
+    --hairline-color: var(--border);
+    --link-fg: var(--royal-blue);
+    --link-hover-color: var(--deep-navy);
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) {
+        --body-bg: #171b2e;
+        --body-fg: var(--warm-white);
+        --body-loud-color: var(--white);
+        --darkened-bg: #20263c;
+        --selected-bg: #29334e;
+        --border-color: #46506c;
+        --hairline-color: #46506c;
+        --link-fg: #a9c9ff;
+        --link-hover-color: var(--soft-sky);
+    }
+}
+html[data-theme="dark"] { --link-fg: #a9c9ff; --link-hover-color: var(--soft-sky); }
+
+#content :is(h1, h2) { font-family: var(--font-heading); }
+#content h1 { color: var(--body-loud-color); font-weight: 700; }
+#header { padding: 0.55rem 1.75rem; line-height: 1.35; }
+#site-name { font-size: clamp(1rem, 2vw, 1.35rem); }
+#site-name .tagc-admin-brand { display: inline-flex; align-items: center; gap: 0.65rem; font-weight: 800; }
+.tagc-admin-brand img { width: clamp(2rem, 5vw, 2.8rem); height: auto; }
+#user-tools, #logout-form button {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+}
+@media (max-width: 52rem) {
+    #header { padding-inline: 1rem; }
+}
+input[type="submit"].default, .submit-row input.default { color: var(--deep-navy); font-weight: 700; }
