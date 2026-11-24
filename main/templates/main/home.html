@@ -3,8 +3,8 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&amp;display=swap">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}?v=hero-cormorant">
-    <script src="{% static 'js/home-hero.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}?v=home-progress-anniversary">
+    <script src="{% static 'js/home-hero.js' %}?v=home-progress" defer></script>
 {% endblock %}
 {% block body_attributes %} class="church-home"{% endblock %}
 
@@ -35,7 +35,7 @@
             <span class="home-calendar" aria-hidden="true"></span>
             <div>
                 <h2 id="service-times">Service Times</h2>
-                <p>Lorem ipsum dolor sit amet.</p>
+                <p>Join us for worship at TAGC.</p>
             </div>
             <a class="home-button home-button-outline" href="#visit">View Service Times <span aria-hidden="true">→</span></a>
         </section>
@@ -43,7 +43,7 @@
             <span class="home-pin" aria-hidden="true"></span>
             <div>
                 <h2 id="location">Location</h2>
-                <p>Consectetur adipiscing elit.</p>
+                <p>Tagum City, Philippines</p>
             </div>
             <a class="home-button home-button-outline" href="#contact">Get Directions <span aria-hidden="true">→</span></a>
         </section>
@@ -54,14 +54,14 @@
     <div class="home-intro">
         <section id="about" aria-labelledby="about-title">
             <h2 id="about-title">About Our Church</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <p>TAGC began in 1977 as a small community devoted to worship, discipleship, and serving others. Today, generations worship together and share the hope of Jesus Christ.</p>
             <a class="home-text-link" href="#involved">Learn More About Us <span aria-hidden="true">→</span></a>
         </section>
         <img src="{% static 'images/home-church-exterior.webp' %}"
              alt="Exterior of Tagum Alliance Gospel Church" width="1536" height="1024" loading="lazy">
         <section id="visit" aria-labelledby="visit-title">
             <h2 id="visit-title">What to Expect</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas faucibus mollis interdum. Cras mattis consectetur purus sit amet fermentum.</p>
+            <p>Come worship Jesus Christ with us, meet people from different generations, and learn how we grow in faith and serve together.</p>
             <a class="home-text-link" href="#contact">Plan Your Visit <span aria-hidden="true">→</span></a>
         </section>
     </div>
@@ -71,10 +71,10 @@
             <img src="{% static 'images/home-events.webp' %}" alt="" width="304" height="151" loading="lazy">
             <div class="home-card-copy">
                 <h2 id="events-title">Upcoming Events</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>See what’s ahead as TAGC celebrates 50 years of God’s faithfulness.</p>
                 <details>
                     <summary class="home-button home-button-gold">View Events <span aria-hidden="true">→</span></summary>
-                    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p>We look forward to celebrating with you. Check back for event updates.</p>
                 </details>
             </div>
         </section>
@@ -82,10 +82,10 @@
             <img src="{% static 'images/home-bible-study.webp' %}" alt="" width="1200" height="600" loading="lazy">
             <div class="home-card-copy">
                 <h2 id="ministries-title">Ministries &amp; Small Groups</h2>
-                <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+                <p>Grow in faith through care groups, fellowship, and opportunities to serve.</p>
                 <details>
                     <summary class="home-button home-button-gold">Explore Ministries <span aria-hidden="true">→</span></summary>
-                    <p>Donec sed odio dui. Maecenas faucibus mollis interdum.</p>
+                    <p>TAGC serves children, youth, and adults through worship, prayer, discipleship, and community outreach.</p>
                 </details>
             </div>
         </section>
@@ -93,10 +93,10 @@
             <img src="{% static 'images/home-sermon-flowers.webp' %}" alt="" width="1200" height="600" loading="lazy">
             <div class="home-card-copy">
                 <h2 id="sermons-title">Latest Sermon</h2>
-                <p>Cras mattis consectetur purus sit amet fermentum.</p>
+                <p>Grow in your understanding of God’s Word.</p>
                 <details>
                     <summary class="home-button home-button-gold">Watch Sermon <span aria-hidden="true">→</span></summary>
-                    <p>Etiam porta sem malesuada magna mollis euismod.</p>
+                    <p>Check back for sermon updates from TAGC.</p>
                 </details>
             </div>
         </section>
@@ -107,19 +107,29 @@
     <div class="home-wrap home-actions">
         <section id="involved" aria-labelledby="involved-title">
             <h2 id="involved-title">Get Involved</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Pray with us, worship with us, or serve alongside us.</p>
             <a class="home-button home-button-outline" href="#ministries">Get Involved <span aria-hidden="true">→</span></a>
         </section>
         <section id="giving" aria-labelledby="giving-title">
             <h2 id="giving-title">Give</h2>
-            <p>Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <p>Support the church’s work as God leads you.</p>
             <details>
                 <summary class="home-button home-button-outline">Give Now <span aria-hidden="true">→</span></summary>
-                <p>Nullam quis risus eget urna mollis ornare vel eu leo.</p>
+                <p>Your giving helps support discipleship, outreach, and ministry to the next generation.</p>
             </details>
         </section>
     </div>
 </div>
+<dialog class="home-progress" id="home-progress"
+        aria-labelledby="home-progress-title" aria-describedby="home-progress-message">
+    <span class="home-progress-icon" aria-hidden="true">✦</span>
+    <h2 id="home-progress-title">Our website is still in progress</h2>
+    <p id="home-progress-message">Welcome to TAGC! We’re still updating some pages. While we get things ready, visit our 50th anniversary website.</p>
+    <form class="home-progress-actions" method="dialog">
+        <a class="home-button home-button-gold" href="https://tagcph.com/50th/about-us/">Visit the 50th anniversary site <span aria-hidden="true">→</span></a>
+        <button class="home-button home-button-outline" autofocus>Continue exploring</button>
+    </form>
+</dialog>
 {% endblock %}
 
 {% block footer %}
@@ -131,11 +141,11 @@
         </a>
         <section id="contact" aria-labelledby="contact-title">
             <h2 id="contact-title">Contact</h2>
-            <p>Lorem ipsum dolor sit amet.</p>
+            <p>Tagum Alliance Gospel Church, Tagum City</p>
         </section>
         <section aria-labelledby="socials-title">
             <h2 id="socials-title">Socials</h2>
-            <p>Consectetur adipiscing elit.</p>
+            <p>Follow TAGC for church news and updates.</p>
             <ul class="home-socials" aria-label="Social platforms">
                 <li><span aria-label="Facebook" role="img" class="home-facebook">f</span></li>
                 <li><span aria-label="YouTube" role="img" class="home-youtube">▶</span></li>

@@ -18,3 +18,25 @@ new ResizeObserver(() => {
 }).observe(heroTitle);
 
 document.fonts.ready.then(fitHeroTitle);
+
+const progressNotice = document.querySelector("#home-progress");
+const progressNoticeKey = "tagc-home-progress-seen";
+
+function showProgressNotice() {
+    if (!progressNotice || typeof progressNotice.showModal !== "function") return;
+
+    try {
+        if (sessionStorage.getItem(progressNoticeKey)) return;
+    } catch {
+        // The notice can still open when browser storage is unavailable.
+    }
+
+    progressNotice.showModal();
+    try {
+        sessionStorage.setItem(progressNoticeKey, "1");
+    } catch {
+        // Dismissal still works without browser storage.
+    }
+}
+
+showProgressNotice();

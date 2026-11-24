@@ -1,10 +1,13 @@
 const navigationToggle = document.querySelector(".navigation-toggle");
 const navigationLinks = document.querySelector("#main-navigation-links");
-const compactNavigation = window.matchMedia("(max-width: 52rem)");
-const accountMenu = document.querySelector(".home-account-menu");
+const compactNavigation = window.matchMedia("(max-width: 64rem)");
+const accountMenu = document.querySelector(".account-menu");
 
 if (accountMenu) {
     const accountToggle = accountMenu.querySelector("summary");
+    accountMenu.addEventListener("focusout", (event) => {
+        if (event.relatedTarget && !accountMenu.contains(event.relatedTarget)) accountMenu.open = false;
+    });
     document.addEventListener("click", (event) => {
         if (accountMenu.open && !accountMenu.contains(event.target)) accountMenu.open = false;
     });
@@ -48,5 +51,11 @@ if (navigationToggle && navigationLinks) {
             setNavigation(false);
             navigationToggle.focus();
         }
+    });
+}
+
+if (navigationToggle && navigationLinks) {
+    navigationLinks.addEventListener("click", (event) => {
+        if (compactNavigation.matches && event.target.closest("a")) setNavigation(false);
     });
 }

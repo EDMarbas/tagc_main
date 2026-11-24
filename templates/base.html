@@ -8,7 +8,8 @@
     <link rel="icon" type="image/png" href="{% static 'images/tagc-logo.png' %}">
     {% include "includes/theme.html" %}
     <link rel="stylesheet" href="{% static 'css/site.css' %}?v=member-completeness-note">
-    <script src="{% static 'js/site.js' %}?v=account-menu" defer></script>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}?v=1">
+    <script src="{% static 'js/site.js' %}?v=navbar-refresh" defer></script>
     {% block extra_head %}{% endblock %}
 </head>
 <body{% block body_attributes %}{% endblock %}>

@@ -1,15 +1,39 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Create an Account | Tagum Alliance Gospel Church{% endblock %}
+{% block title %}Registration Paused | Tagum Alliance Gospel Church{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}?v=home-progress-anniversary">
+{% endblock %}
 
 {% block content %}
-<section class="login-panel" aria-labelledby="register-title">
-    <h1 id="register-title">Create an Account</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button" type="submit">Create account</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+<section class="login-panel" aria-labelledby="registration-paused-title">
+    <h1 id="registration-paused-title">Registration is temporarily paused</h1>
+    <p>Our website is still in progress. If you already have an account, you can still log in.</p>
+    <p><a href="{% url 'main:home' %}">Back to homepage</a></p>
 </section>
+
+<dialog class="home-progress" id="registration-paused"
+        aria-labelledby="registration-popup-title"
+        aria-describedby="registration-popup-message">
+    <span class="home-progress-icon" aria-hidden="true">✦</span>
+    <h2 id="registration-popup-title">Registration is temporarily paused</h2>
+    <p id="registration-popup-message">
+        Our website is still in progress. In the meantime, get to know TAGC
+        on our 50th anniversary site.
+    </p>
+    <div class="home-progress-actions">
+        <a class="home-button home-button-gold"
+           href="https://tagcph.com/50th/about-us/">Visit the 50th anniversary site</a>
+        <a class="home-button home-button-outline" href="{% url 'main:home' %}" autofocus>Back to homepage</a>
+    </div>
+</dialog>
+
+<script>
+    const registrationNotice = document.getElementById("registration-paused");
+    if (typeof registrationNotice.showModal === "function") {
+        registrationNotice.showModal();
+    }
+</script>
 {% endblock %}

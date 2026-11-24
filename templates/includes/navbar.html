@@ -20,7 +20,7 @@
         </a>
         <button class="navigation-toggle" type="button" aria-controls="main-navigation-links" aria-expanded="false" hidden>Menu</button>
         <ul class="navigation-links" id="main-navigation-links">
-            <li><a href="{% url 'main:home' %}">Home</a></li>
+            <li><a href="{% url 'main:home' %}"{% if request.resolver_match.view_name == "main:home" %} aria-current="page"{% endif %}>Home</a></li>
             {% if request.resolver_match.view_name == "main:home" %}
                 <li><a href="#about">About</a></li>
                 <li><a href="#ministries">Ministries</a></li>
@@ -38,15 +38,15 @@
             {% endif %}
         </ul>
         {% if request.resolver_match.view_name == "main:home" %}
-            <div class="home-account-actions">
+            <div class="account-actions">
                 {% if user.is_authenticated %}
-                    {% if perms.members.view_member or perms.members.review_membershipcheck or not user.is_staff and not user.is_superuser %}
-                        <details class="home-account-menu">
-                            <summary>More</summary>
-                            <ul>{% include "includes/account_links.html" %}</ul>
-                        </details>
-                    {% endif %}
-                    {% include "includes/logout_form.html" %}
+                    <details class="account-menu">
+                        <summary>{% if perms.members.view_member or perms.members.review_membershipcheck %}Manage{% else %}My Account{% endif %}</summary>
+                        <ul>
+                            {% include "includes/account_links.html" %}
+                            <li class="account-logout">{% include "includes/logout_form.html" %}</li>
+                        </ul>
+                    </details>
                 {% else %}
                     <a class="button" href="{% url 'login' %}">Log In</a>
                 {% endif %}
